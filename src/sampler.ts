@@ -7,6 +7,7 @@ import {
 import { SampleStart, SampleStop } from "./player/types";
 import { midiVelToGain } from "./player/volume";
 import { HttpStorage, Storage } from "./storage";
+import { type AudioContext } from "standardized-audio-context";
 
 export type SamplerConfig = {
   storage?: Storage;
@@ -36,7 +37,7 @@ export class Sampler {
     options: Partial<SamplerConfig> = {}
   ) {
     this.#options = {
-      destination: options.destination ?? context.destination,
+      destination: options.destination ?? context.destination as unknown as AudioNode,
       detune: 0,
       volume: options.volume ?? 100,
       velocity: options.velocity ?? 100,

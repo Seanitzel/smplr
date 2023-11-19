@@ -1,3 +1,4 @@
+import { type AudioContext } from "standardized-audio-context";
 import { createControl } from "./player/signals";
 import { midiVelToGain } from "./player/volume";
 import { SfzSampler, SfzSamplerConfig } from "./sfz/sfz-sampler";

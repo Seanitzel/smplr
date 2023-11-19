@@ -12,6 +12,8 @@ import {
   EMPTY_INSTRUMENT,
   fetchDrumMachineInstrument,
 } from "./dm-instrument";
+import { type AudioContext } from "standardized-audio-context";
+
 
 export function getDrumMachineNames() {
   return Object.keys(INSTRUMENTS);
@@ -101,7 +103,7 @@ export class DrumMachine {
 }
 
 function drumMachineLoader(
-  context: BaseAudioContext,
+  context: AudioContext,
   buffers: AudioBuffers,
   instrument: Promise<DrumMachineInstrument>,
   storage: Storage

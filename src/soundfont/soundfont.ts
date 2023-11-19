@@ -1,3 +1,4 @@
+import { GainNode, type AudioContext } from "standardized-audio-context";
 import { DefaultPlayer, DefaultPlayerConfig } from "../player/default-player";
 import {
   createEmptyRegionGroup,
@@ -64,7 +65,8 @@ export class Soundfont {
       return this;
     });
 
-    const gain = new GainNode(context, { gain: this.config.extraGain });
+    const gain = context.createGain();
+    gain.gain.value = this.config.extraGain;
     this.player.output.addInsert(gain);
   }
 
@@ -107,7 +109,7 @@ function soundfontLoader(
   group: RegionGroup
 ) {
   const loadInstrument = soundfontInstrumentLoader(url, buffers, group);
-  return async (context: BaseAudioContext, storage: Storage) => {
+  return async (context: AudioContext, storage: Storage) => {
     const [_, loops] = await Promise.all([
       loadInstrument(context, storage),
       fetchSoundfontLoopData(loopsUrl),

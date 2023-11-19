@@ -10,6 +10,7 @@ import {
   SampleStart,
   SampleStop,
 } from "./types";
+import { type AudioContext } from "standardized-audio-context";
 
 type PlayerOptions = ChannelConfig & SampleOptions & QueuedPlayerConfig;
 
@@ -24,13 +25,13 @@ export class RegionPlayer implements InternalPlayer {
   private seqNum = 0;
 
   constructor(
-    public readonly context: BaseAudioContext,
+    public readonly context: AudioContext,
     options: Partial<PlayerOptions>
   ) {
     const channel = new Channel(context, options);
     this.group = createEmptyRegionGroup();
     this.player = new QueuedPlayer(
-      new SamplePlayer(context, { ...options, destination: channel.input }),
+      new SamplePlayer(context, { ...options, destination: channel.input as unknown as AudioNode }),
       options
     );
     this.output = channel;

@@ -1,4 +1,5 @@
 import { PROCESSOR } from "./processor.min";
+import { type AudioContext, AudioWorkletNode, IAudioDestinationNode, IAudioParam } from "standardized-audio-context";
 
 const PARAMS = [
   "preDelay",
@@ -22,29 +23,30 @@ async function createDattorroReverbEffect(context: AudioContext) {
   if (!ready) {
     const blob = new Blob([PROCESSOR], { type: "application/javascript" });
     const url = URL.createObjectURL(blob);
-    ready = context.audioWorklet.addModule(url);
+    ready = context.audioWorklet?.addModule(url) ?? Promise.reject();
     init.set(context, ready);
   }
   await ready;
 
+  if (!AudioWorkletNode) return Promise.reject();
   const reverb = new AudioWorkletNode(context, "DattorroReverb", {
     outputChannelCount: [2],
-  });
+  }) ?? Promise.reject();
   return reverb;
 }
 
 export class Reverb {
-  #effect: AudioWorkletNode | undefined;
+  #effect: AudioWorkletNode<AudioContext> | undefined;
   #ready: Promise<this>;
   public readonly input: AudioNode;
-  #output: AudioNode;
+  #output: IAudioDestinationNode<AudioContext> | AudioNode;
 
   constructor(context: AudioContext) {
-    this.input = context.createGain();
+    this.input = context.createGain() as unknown as AudioNode;
     this.#output = context.destination;
     this.#ready = createDattorroReverbEffect(context).then((reverb) => {
-      this.input.connect(reverb);
-      reverb.connect(this.#output);
+      this.input.connect(reverb as unknown as AudioNode);
+      reverb.connect(this.#output as any);
       this.#effect = reverb;
       return this;
     });
@@ -54,7 +56,7 @@ export class Reverb {
     return PARAMS;
   }
 
-  getParam(name: (typeof PARAMS)[number]): AudioParam | undefined {
+  getParam(name: (typeof PARAMS)[number]): IAudioParam | undefined {
     return this.#effect?.parameters.get("preDelay");
   }
 
@@ -68,8 +70,8 @@ export class Reverb {
 
   connect(output: AudioNode) {
     if (this.#effect) {
-      this.#effect.disconnect(this.#output);
-      this.#effect.connect(output);
+      this.#effect.disconnect(this.#output as any);
+      this.#effect.connect(output as any);
     }
     this.#output = output;
   }

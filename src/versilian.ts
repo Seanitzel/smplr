@@ -9,6 +9,7 @@ import {
 } from "./player/types";
 import { SfzInstrumentLoader } from "./sfz2";
 import { HttpStorage, Storage } from "./storage";
+import { type AudioContext } from "standardized-audio-context";
 
 let instruments: string[] = [];
 
@@ -61,7 +62,7 @@ export class Versilian implements InternalPlayer {
   public readonly load: Promise<this>;
   private config: VersilianConfig;
 
-  constructor(context: BaseAudioContext, options: VersilianOptions = {}) {
+  constructor(context: AudioContext, options: VersilianOptions = {}) {
     this.config = {
       instrument: options.instrument ?? "Arco",
       storage: options.storage ?? HttpStorage,
@@ -84,7 +85,7 @@ export class Versilian implements InternalPlayer {
     return this.player.buffers;
   }
 
-  get context(): BaseAudioContext {
+  get context(): AudioContext {
     return this.player.context;
   }
 

@@ -10,6 +10,7 @@ import {
 } from "./player/types";
 import { SfzInstrumentLoader } from "./sfz2";
 import { HttpStorage, Storage } from "./storage";
+import { type AudioContext } from "standardized-audio-context";
 
 export function getSmolkenNames() {
   return ["Pizzicato", "Arco", "Switched"];
@@ -37,7 +38,7 @@ export class Smolken implements InternalPlayer {
   private config: SmolkenConfig;
   private seqNum = 0;
 
-  constructor(context: BaseAudioContext, options: SmolkenOptions = {}) {
+  constructor(context: AudioContext, options: SmolkenOptions = {}) {
     this.config = {
       instrument: options.instrument ?? "Arco",
       storage: options.storage ?? HttpStorage,
@@ -67,7 +68,7 @@ export class Smolken implements InternalPlayer {
     return this.player.buffers;
   }
 
-  get context(): BaseAudioContext {
+  get context(): AudioContext {
     return this.player.context;
   }
 

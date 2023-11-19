@@ -6,6 +6,7 @@ import {
 import { Storage } from "../storage";
 import { SfzInstrument } from "./sfz-kits";
 import { Websfz, WebsfzGroup } from "./websfz";
+import { type AudioContext } from "standardized-audio-context";
 
 export async function loadSfzBuffers(
   context: AudioContext,

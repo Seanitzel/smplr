@@ -50,5 +50,8 @@
   },
   "jest": {
     "preset": "ts-jest"
+  },
+  "dependencies": {
+    "standardized-audio-context": "^25.3.58"
   }
 }

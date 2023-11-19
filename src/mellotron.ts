@@ -19,6 +19,7 @@ import {
   SampleStop,
 } from "./player/types";
 import { HttpStorage, Storage } from "./storage";
+import { type AudioContext } from "standardized-audio-context";
 
 const INSTRUMENT_VARIATIONS: Record<string, [string, string]> = {
   "300 STRINGS CELLO": ["300 STRINGS", "CELL"],
@@ -78,7 +79,7 @@ export class Mellotron implements InternalPlayer {
   readonly load: Promise<this>;
 
   public constructor(
-    public readonly context: BaseAudioContext,
+    public readonly context: AudioContext,
     options: MellotronOptions
   ) {
     this.config = getMellotronConfig(options);
@@ -135,7 +136,7 @@ function loadMellotronInstrument(
   let variation = INSTRUMENT_VARIATIONS[instrument];
   if (variation) instrument = variation[0];
 
-  return (context: BaseAudioContext, storage: Storage) => {
+  return (context: AudioContext, storage: Storage) => {
     const baseUrl = `https://smpldsnds.github.io/archiveorg-mellotron/${instrument}/`;
     const audioExt = getPreferredAudioExtension();
     return fetch(baseUrl + "files.json")

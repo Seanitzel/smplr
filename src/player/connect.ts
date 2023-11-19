@@ -1,9 +1,11 @@
+import { type IGainNode, type AudioContext, IAudioContext, IAudioBufferSourceNode } from "standardized-audio-context";
+
 export type AudioInsert = {
   input: AudioNode;
   output: AudioNode;
 };
 
-export function connectSerial(nodes: (AudioNode | AudioInsert | undefined)[]) {
+export function connectSerial(nodes: (AudioNode | AudioInsert | undefined | IGainNode<AudioContext> | IAudioBufferSourceNode<IAudioContext>)[]) {
   const _nodes = nodes.filter((x): x is AudioNode | AudioInsert => !!x);
   _nodes.reduce((a, b) => {
     const left = "output" in a ? a.output : a;

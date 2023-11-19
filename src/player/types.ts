@@ -1,3 +1,4 @@
+import { type AudioContext } from "standardized-audio-context";
 import { AudioBuffers } from "./load-audio";
 import { Subscribe } from "./signals";
 
@@ -6,7 +7,7 @@ import { Subscribe } from "./signals";
  */
 export type InternalPlayer = {
   readonly buffers: AudioBuffers;
-  readonly context: BaseAudioContext;
+  readonly context: AudioContext;
   start(sample: SampleStart): (time?: number) => void;
   stop(sample?: SampleStop): void;
   disconnect(): void;

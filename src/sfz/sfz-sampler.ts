@@ -1,3 +1,4 @@
+import { type AudioContext } from "standardized-audio-context";
 import { DefaultPlayer, DefaultPlayerConfig } from "../player/default-player";
 import { toMidi } from "../player/midi";
 import { SampleStart, SampleStop } from "../player/types";
@@ -102,7 +103,7 @@ export class SfzSampler {
         ...sample,
         note: region.sample,
         decayTime: sample.decayTime,
-        detune: detune + (sample.detune ?? this.options.detune),
+        // detune: detune + (sample.detune ?? this.options.detune),
         onEnded,
         stopId: midi,
       });

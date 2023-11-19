@@ -1,9 +1,10 @@
+import { IGainNode, AudioContext, IAudioContext, GainNode } from "standardized-audio-context";
 import { AudioInsert, connectSerial } from "./connect";
 import { createControl } from "./signals";
 import { midiVelToGain } from "./volume";
 
 export type ChannelConfig = {
-  destination: AudioNode;
+  destination: AudioNode | IGainNode<AudioContext>;
   volume: number;
   volumeToGain: (volume: number) => number;
 };
@@ -12,7 +13,7 @@ export type OutputChannel = Omit<Channel, "input">;
 
 type Send = {
   name: string;
-  mix: GainNode;
+  mix: IGainNode<AudioContext>;
   disconnect: () => void;
 };
 
@@ -22,22 +23,22 @@ type Send = {
  */
 export class Channel {
   public readonly setVolume: (vol: number) => void;
-  public readonly input: AudioNode;
+  public readonly input: IGainNode<IAudioContext>;
 
-  #volume: GainNode;
+  #volume: IGainNode<IAudioContext>;
   #sends?: Send[];
-  #inserts?: (AudioNode | AudioInsert)[];
+  #inserts?: (AudioNode | AudioInsert | IGainNode<AudioContext>)[];
   #disconnect: () => void;
   #unsubscribe: () => void;
   #config: Readonly<ChannelConfig>;
   #disconnected = false;
 
   constructor(
-    public readonly context: BaseAudioContext,
+    public readonly context: AudioContext,
     options?: Partial<ChannelConfig>
   ) {
     this.#config = {
-      destination: options?.destination ?? context.destination,
+      destination: options?.destination ?? context.destination as unknown as AudioNode,
       volume: options?.volume ?? 100,
       volumeToGain: options?.volumeToGain ?? midiVelToGain,
     };
@@ -58,7 +59,7 @@ export class Channel {
     });
   }
 
-  addInsert(effect: AudioNode | AudioInsert) {
+  addInsert(effect: AudioNode | AudioInsert | IGainNode<AudioContext>) {
     if (this.#disconnected) {
       throw Error("Can't add insert to disconnected channel");
     }
@@ -81,7 +82,7 @@ export class Channel {
     if (this.#disconnected) {
       throw Error("Can't add effect to disconnected channel");
     }
-    const mix = new GainNode(this.context);
+    const mix = this.context.createGain();
     mix.gain.value = mixValue;
     const input = "input" in effect ? effect.input : effect;
     const disconnect = connectSerial([this.#volume, mix, input]);

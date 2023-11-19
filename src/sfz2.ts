@@ -5,6 +5,7 @@ import {
 } from "./player/load-audio";
 import { RegionGroup, SampleRegion } from "./player/types";
 import { Storage } from "./storage";
+import { type AudioContext } from "standardized-audio-context";
 
 export type SfzLoaderConfig = {
   urlFromSampleName: (sampleName: string, audioExt: string) => string;
@@ -15,7 +16,7 @@ export type SfzLoaderConfig = {
 export function SfzInstrumentLoader(url: string, config: SfzLoaderConfig) {
   const audioExt = getPreferredAudioExtension();
 
-  return async (context: BaseAudioContext, storage: Storage) => {
+  return async (context: AudioContext, storage: Storage) => {
     const sfz = await fetch(url).then((res) => res.text());
     const errors = sfzToLayer(sfz, config.group);
     if (errors.length) {

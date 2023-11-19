@@ -1,4 +1,5 @@
 import { Versilian, VersilianOptions } from "./versilian";
+import { type AudioContext } from "standardized-audio-context";
 
 export function getMalletNames() {
   return Object.keys(NAME_TO_PATH) as MalletName[];

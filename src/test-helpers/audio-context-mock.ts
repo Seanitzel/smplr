@@ -1,3 +1,5 @@
+import { type AudioContext } from "standardized-audio-context";
+
 function add<T>(item: T, list: T[]) {
   list.push(item);
   return item;

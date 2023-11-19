@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { DrumMachine, getDrumMachineNames, Reverb } from "smplr";
 import { LoadWithStatus, useStatus } from "./useStatus";
+import { AudioContext } from "standardized-audio-context";
 
 let context: AudioContext | undefined;
 let reverb: Reverb | undefined;
@@ -14,7 +15,7 @@ export function DrumMachineExample({ className }: { className?: string }) {
 
   function loadDrumMachine(instrument: string) {
     setStatus("loading");
-    context ??= new window.AudioContext();
+    context ??= new AudioContext();
     reverb ??= new Reverb(context);
     const drums = new DrumMachine(context, { instrument });
     drums.output.addEffect("reverb", reverb, reverbMix);

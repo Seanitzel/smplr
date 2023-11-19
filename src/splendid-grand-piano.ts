@@ -8,6 +8,7 @@ import {
 import { toMidi } from "./player/midi";
 import { SampleStart, SampleStop } from "./player/types";
 import { HttpStorage, Storage } from "./storage";
+import { type AudioContext } from "standardized-audio-context";
 
 /**
  * Splendid Grand Piano options
@@ -73,7 +74,7 @@ export class SplendidGrandPiano {
     if (!found) return () => undefined;
     sample.note = found[0];
     sample.stopId = sample.stopId ?? found[1];
-    sample.detune = found[2] + (sample.detune ?? this.options.detune);
+    // sample.detune = found[2] + (sample.detune ?? this.options.detune);
     return this.player.start(sample);
   }
 

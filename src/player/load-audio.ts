@@ -1,3 +1,4 @@
+import { type AudioContext } from "standardized-audio-context";
 import { Storage } from "../storage";
 
 export type AudioBuffers = Record<string | number, AudioBuffer | undefined>;
@@ -6,12 +7,12 @@ export type AudioBuffers = Record<string | number, AudioBuffer | undefined>;
  * A function that downloads audio into a AudioBuffers
  */
 export type AudioBuffersLoader = (
-  context: BaseAudioContext,
+  context: AudioContext,
   buffers: AudioBuffers
 ) => Promise<void>;
 
 export async function loadAudioBuffer(
-  context: BaseAudioContext,
+  context: AudioContext,
   url: string,
   storage: Storage
 ): Promise<AudioBuffer | undefined> {

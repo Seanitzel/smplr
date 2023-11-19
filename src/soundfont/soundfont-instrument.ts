@@ -3,6 +3,7 @@ import { AudioBuffers, findFirstSupportedFormat } from "../player/load-audio";
 import { toMidi } from "../player/midi";
 import { RegionGroup } from "../player/types";
 import { Storage } from "../storage";
+import { type AudioContext } from "standardized-audio-context";
 
 export function gleitzKitUrl(name: string, kit: string) {
   const format = findFirstSupportedFormat(["ogg", "mp3"]) ?? "mp3";
@@ -14,7 +15,7 @@ export function soundfontInstrumentLoader(
   buffers: AudioBuffers,
   group: RegionGroup
 ) {
-  return async (context: BaseAudioContext, storage: Storage) => {
+  return async (context: AudioContext, storage: Storage) => {
     const sourceFile = await (await storage.fetch(url)).text();
     const json = midiJsToJson(sourceFile);
 
